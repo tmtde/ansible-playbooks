@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install grub packages
+      ansible.builtin.apt:
+        name:
+          - grub-pc
+          - grub2-common
+        update_cache: true
+        install_recommends: false
+
+    - name: Install postfix package
+      ansible.builtin.apt:
+        name:
+          - postfix
+        update_cache: true
+        install_recommends: false

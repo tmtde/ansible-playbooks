@@ -1,0 +1,29 @@
+---
+role_name_check: 1
+dependency:
+  name: galaxy
+  options:
+    role-file: roles/requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: "${MOLECULE_DISTRO:-qwe1/docker-debian:11-molecule}"
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: true
+    pre_build_image: true
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    pull: true
+    override_command: false
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+  log: true
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+scenario:
+  name: default

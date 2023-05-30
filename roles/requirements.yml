@@ -1,0 +1,12 @@
+---
+roles:
+  - name: geerlingguy.docker
+  - name: darkwizard242.lazydocker
+  - name: waja.dockerconfig
+    scm: git
+    version: master
+    src: https://github.com/waja/ansible-role-docker-config.git
+  - name: waja.dockertools
+    scm: git
+    version: master
+    src: https://github.com/waja/ansible-role-docker-tools.git

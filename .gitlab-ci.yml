@@ -1,0 +1,54 @@
+---
+# See https://gitlab.com/richardskumat/ansible-role-client-debian-role/-/blob/master/.gitlab-ci.yml
+image: qwe1/dind-ansible-molecule:2.14.4
+variables:
+  # DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  # https://gitlab.com/gitlab-org/gitlab-ce/issues/64959
+  # 19.03 had some breaking changes compared to 18.09
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+stages:
+  - lint
+  - test
+before_script:
+  - docker info
+  - ansible --version
+  - molecule --version
+
+lint:
+  stage: lint
+  tags:
+    - ansible
+  image: python:latest
+  before_script:
+    - pip3 install yamllint ansible-lint
+  script:
+    - yamllint .
+    - ansible-lint
+
+.molecule_test: &molecule_test
+  stage: test
+  dependencies:
+    - lint
+  tags:
+    - ansible
+  script:
+    - molecule test
+ubuntu_2004:
+  variables:
+    MOLECULE_DISTRO: "geerlingguy/docker-ubuntu2004-ansible"
+  extends:
+    - .molecule_test
+debian_10:
+  variables:
+    MOLECULE_DISTRO: "geerlingguy/docker-debian10-ansible"
+  extends:
+    - .molecule_test
+debian_11:
+  variables:
+    MOLECULE_DISTRO: "qwe1/docker-debian:11-molecule"
+  extends:
+    - .molecule_test
