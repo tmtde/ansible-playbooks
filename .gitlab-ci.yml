@@ -52,3 +52,8 @@ debian_11:
     MOLECULE_DISTRO: "qwe1/docker-debian:11-molecule"
   extends:
     - .molecule_test
+debian_12:
+  variables:
+    MOLECULE_DISTRO: "geerlingguy/docker-debian12-ansible"
+  extends:
+    - .molecule_test
